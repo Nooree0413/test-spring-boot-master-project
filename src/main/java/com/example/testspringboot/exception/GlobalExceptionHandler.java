@@ -7,9 +7,14 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
-    @ExceptionHandler(value = {FilmNotFoundException.class, ActeurNotFoundException.class})
+    @ExceptionHandler(value = {FilmNotFoundException.class, ActeurNotFoundException.class, })
     public ResponseEntity<Object> handleNotFoundException(RuntimeException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(DuplicateFilmException.class)
+    public ResponseEntity<String> handleDuplicateFilmException(DuplicateFilmException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(value = {Exception.class})

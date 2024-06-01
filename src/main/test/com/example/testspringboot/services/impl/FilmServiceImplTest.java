@@ -7,6 +7,7 @@ import com.example.testspringboot.entity.Film;
 import com.example.testspringboot.exception.FilmNotFoundException;
 import com.example.testspringboot.mapper.FilmMapper;
 import com.example.testspringboot.repository.FilmRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -18,10 +19,10 @@ import java.util.Optional;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class FilmServiceImplTest {
+ class FilmServiceImplTest {
     @InjectMocks
     private FilmServiceImpl filmService;
 
@@ -34,26 +35,26 @@ public class FilmServiceImplTest {
     private Film film;
     private FilmDto filmDto;
 
-    @Test
-    public void testGetFilmById()  {
+    @BeforeEach
+    public void setUp() {
         Acteur acteur1 = Acteur.builder()
-                .id(1l)
+                .id(1L)
                 .nom("nom 1")
                 .prenom("prenom 1")
                 .build();
         Acteur acteur2 = Acteur.builder()
-                .id(1l)
+                .id(1L)
                 .nom("nom 2")
                 .prenom("prenom 2")
                 .build();
 
         ActeurDto acteurDto1 = ActeurDto.builder()
-                .id(1l)
+                .id(1L)
                 .nom("nom 1")
                 .prenom("prenom 1")
                 .build();
         ActeurDto acteurDto2 = ActeurDto.builder()
-                .id(1l)
+                .id(1L)
                 .nom("nom 2")
                 .prenom("prenom 2")
                 .build();
@@ -76,6 +77,11 @@ public class FilmServiceImplTest {
                 .acteurDtos(acteurDtos)
                 .build();
 
+    }
+
+    @Test
+    void testGetFilmById()  {
+
         when(filmRepository.findById(1L)).thenReturn(Optional.of(film));
         when(filmMapper.toDto(film)).thenReturn(filmDto);
 
@@ -86,9 +92,23 @@ public class FilmServiceImplTest {
     }
 
     @Test
-    public void testGetFilmByIdNotFound() {
+    void testGetFilmByIdNotFound() {
         when(filmRepository.findById(1L)).thenReturn(Optional.empty());
 
         assertThrows(FilmNotFoundException.class, () -> filmService.getFilmById(1L));
     }
+
+    @Test
+    void testCreateFilm() {
+
+        when(filmMapper.toEntity(filmDto)).thenReturn(film);
+        when(filmRepository.save(film)).thenReturn(film);
+        when(filmMapper.toDto(film)).thenReturn(filmDto);
+
+        FilmDto result = filmService.addFilm(filmDto);
+
+        assertEquals("title 1", result.getTitle());
+        verify(filmRepository, times(1)).save(film);
+    }
+
 }
