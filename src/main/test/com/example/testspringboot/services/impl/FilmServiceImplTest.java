@@ -2,8 +2,7 @@ package com.example.testspringboot.services.impl;
 
 import com.example.testspringboot.entity.Acteur;
 import com.example.testspringboot.entity.Film;
-import com.example.testspringboot.exception.FilmNotFoundException;
-import com.example.testspringboot.mapper.FilmMapper;
+import com.example.testspringboot.repository.ActeurRepository;
 import com.example.testspringboot.repository.FilmRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,8 +15,7 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -29,10 +27,11 @@ import static org.mockito.Mockito.*;
     private FilmRepository filmRepository;
 
     @Mock
-    private FilmMapper filmMapper;
+    private ActeurRepository acteurRepository;
 
     private Film film;
 
+    Set<Acteur> acteurs = new HashSet<>();
 
     @BeforeEach
     public void setUp() {
@@ -47,8 +46,8 @@ import static org.mockito.Mockito.*;
                 .prenom("prenom 2")
                 .build();
 
-        Set<Acteur> acteurs = new HashSet<>(Set.of(acteur1, acteur2));
-
+       acteurs.add(acteur1);
+       acteurs.add(acteur2);
 
         film = Film.builder()
                 .id(1L)
@@ -63,21 +62,24 @@ import static org.mockito.Mockito.*;
 
     @Test
     void testGetFilmById()  {
-
         when(filmRepository.findById(1L)).thenReturn(Optional.of(film));
+        when(acteurRepository.findByFilmsContains(film)).thenReturn(acteurs);
 
+        Optional<Film> result = filmService.getFilmById(1L);
 
-       // Film result = filmService.getFilmById(1L);
-
-        //assertNotNull(result);
-        //assertEquals(film.getTitle(), result.getTitle());
+        assertTrue(result.isPresent());
+        assertEquals(film.getId(), result.get().getId());
+        assertEquals(film.getTitle(), result.get().getTitle());
+        assertEquals(acteurs, result.get().getActeurs());
     }
 
     @Test
     void testGetFilmByIdNotFound() {
-        when(filmRepository.findById(1L)).thenReturn(Optional.empty());
+        when(filmRepository.findById(2L)).thenReturn(Optional.empty());
 
-        assertThrows(FilmNotFoundException.class, () -> filmService.getFilmById(1L));
+        Optional<Film> result = filmService.getFilmById(2L);
+
+        assertFalse(result.isPresent());
     }
 
     @Test
