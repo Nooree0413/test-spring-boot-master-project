@@ -1,6 +1,6 @@
 package com.example.testspringboot.controller;
 
-import com.example.testspringboot.dto.FilmDto;
+import com.example.testspringboot.entity.Film;
 import com.example.testspringboot.services.FilmService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,14 +17,14 @@ public class FilmController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<FilmDto> getFilmById(@PathVariable Long id) {
-        FilmDto filmDto = filmService.getFilmById(id);
-        return new ResponseEntity<>(filmDto, HttpStatus.OK);
+    public ResponseEntity<Film> getFilmById(@PathVariable Long id) {
+        Film film = filmService.getFilmById(id);
+        return new ResponseEntity<>(film, HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<FilmDto> createFilm(@RequestBody FilmDto filmDto) {
-        FilmDto newFilm = filmService.addFilm(filmDto);
+    public ResponseEntity<Film> createFilm(@RequestBody Film film) {
+        Film newFilm = filmService.addFilm(film);
         return new ResponseEntity<>(newFilm, HttpStatus.CREATED);
     }
 }

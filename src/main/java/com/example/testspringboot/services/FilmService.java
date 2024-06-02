@@ -1,11 +1,11 @@
 package com.example.testspringboot.services;
 
-import com.example.testspringboot.dto.FilmDto;
+import com.example.testspringboot.entity.Film;
 
 public interface FilmService {
-    FilmDto getFilmById(long id);
+    Film getFilmById(long id);
 
-    FilmDto addFilm(FilmDto filmDto);
+    Film addFilm(Film film);
 
     boolean isDuplicateFilmTitle(String title);
 }

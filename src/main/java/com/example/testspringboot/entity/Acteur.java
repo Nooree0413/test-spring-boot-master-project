@@ -1,9 +1,11 @@
 package com.example.testspringboot.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -20,6 +22,6 @@ public class Acteur {
 
     private String prenom;
 
-    @ManyToMany(mappedBy = "acteurs")
-    private Set<Film> films = new HashSet<>();
+    @ManyToMany(mappedBy = "acteurs", fetch=FetchType.EAGER)
+    private Set<Film> films ;
 }

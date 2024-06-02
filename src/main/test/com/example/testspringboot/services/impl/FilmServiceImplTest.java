@@ -1,7 +1,5 @@
 package com.example.testspringboot.services.impl;
 
-import com.example.testspringboot.dto.ActeurDto;
-import com.example.testspringboot.dto.FilmDto;
 import com.example.testspringboot.entity.Acteur;
 import com.example.testspringboot.entity.Film;
 import com.example.testspringboot.exception.FilmNotFoundException;
@@ -33,7 +31,7 @@ import static org.mockito.Mockito.*;
     private FilmMapper filmMapper;
 
     private Film film;
-    private FilmDto filmDto;
+
 
     @BeforeEach
     public void setUp() {
@@ -48,19 +46,7 @@ import static org.mockito.Mockito.*;
                 .prenom("prenom 2")
                 .build();
 
-        ActeurDto acteurDto1 = ActeurDto.builder()
-                .id(1L)
-                .nom("nom 1")
-                .prenom("prenom 1")
-                .build();
-        ActeurDto acteurDto2 = ActeurDto.builder()
-                .id(1L)
-                .nom("nom 2")
-                .prenom("prenom 2")
-                .build();
-
         Set<Acteur> acteurs = new HashSet<>(Set.of(acteur1, acteur2));
-        Set<ActeurDto> acteurDtos = new HashSet<>(Set.of(acteurDto1, acteurDto2));
 
 
         film = Film.builder()
@@ -70,12 +56,7 @@ import static org.mockito.Mockito.*;
                 .acteurs(acteurs)
                 .build();
 
-        filmDto = FilmDto.builder()
-                .id(1L)
-                .title("title 1")
-                .description("description 1")
-                .acteurDtos(acteurDtos)
-                .build();
+
 
     }
 
@@ -83,12 +64,12 @@ import static org.mockito.Mockito.*;
     void testGetFilmById()  {
 
         when(filmRepository.findById(1L)).thenReturn(Optional.of(film));
-        when(filmMapper.toDto(film)).thenReturn(filmDto);
 
-        FilmDto result = filmService.getFilmById(1L);
+
+        Film result = filmService.getFilmById(1L);
 
         assertNotNull(result);
-        assertEquals(filmDto.getTitle(), result.getTitle());
+        assertEquals(film.getTitle(), result.getTitle());
     }
 
     @Test
@@ -101,11 +82,9 @@ import static org.mockito.Mockito.*;
     @Test
     void testCreateFilm() {
 
-        when(filmMapper.toEntity(filmDto)).thenReturn(film);
         when(filmRepository.save(film)).thenReturn(film);
-        when(filmMapper.toDto(film)).thenReturn(filmDto);
 
-        FilmDto result = filmService.addFilm(filmDto);
+        Film result = filmService.addFilm(film);
 
         assertEquals("title 1", result.getTitle());
         verify(filmRepository, times(1)).save(film);

@@ -1,8 +1,10 @@
 package com.example.testspringboot.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -13,5 +15,5 @@ public class FilmDto {
     private Long id;
     private String title;
     private String description;
-    private Set<ActeurDto> acteurDtos =  new HashSet<>();
+    private Set<ActeurDto> acteurDtos;
 }

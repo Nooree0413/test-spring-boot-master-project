@@ -1,9 +1,11 @@
 package com.example.testspringboot.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -20,13 +22,13 @@ public class Film {
 
     private String description;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER,cascade=CascadeType.ALL)
     @JoinTable(
             name = "film_acteur",
             joinColumns = @JoinColumn(name = "film_id"),
             inverseJoinColumns = @JoinColumn(name = "acteur_id")
     )
-    private Set<Acteur> acteurs = new HashSet<>();
+    private Set<Acteur> acteurs;
 
 
 
