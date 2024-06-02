@@ -1,5 +1,6 @@
 package com.example.testspringboot.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,5 +24,6 @@ public class Acteur {
     private String prenom;
 
     @ManyToMany(mappedBy = "acteurs", fetch=FetchType.EAGER)
+    @JsonIgnore
     private Set<Film> films ;
 }

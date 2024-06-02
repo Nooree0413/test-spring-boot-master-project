@@ -6,6 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 
 @RestController
 @RequestMapping("/api/film")
@@ -18,8 +20,8 @@ public class FilmController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Film> getFilmById(@PathVariable Long id) {
-        Film film = filmService.getFilmById(id);
-        return new ResponseEntity<>(film, HttpStatus.OK);
+        Optional<Film> film = filmService.getFilmById(id);
+        return new ResponseEntity<>(film.orElse(null), HttpStatus.OK);
     }
 
     @PostMapping

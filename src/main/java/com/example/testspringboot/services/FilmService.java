@@ -2,8 +2,10 @@ package com.example.testspringboot.services;
 
 import com.example.testspringboot.entity.Film;
 
+import java.util.Optional;
+
 public interface FilmService {
-    Film getFilmById(long id);
+    Optional<Film> getFilmById(long id);
 
     Film addFilm(Film film);
 
